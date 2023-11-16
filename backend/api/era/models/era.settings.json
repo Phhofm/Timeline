@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "eras",
+  "info": {
+    "name": "era"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "events": {
+      "via": "era",
+      "collection": "event"
+    },
+    "timespans": {
+      "via": "era",
+      "collection": "timespan"
+    },
+    "startyear": {
+      "type": "integer",
+      "required": true
+    },
+    "endyear": {
+      "type": "integer",
+      "required": true
+    }
+  }
+}

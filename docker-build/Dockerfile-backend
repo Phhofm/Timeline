@@ -1,0 +1,16 @@
+# syntax=docker/dockerfile:1
+FROM alpine AS cloner
+LABEL maintainer="Philip Hofmann, philip.hofmann@ius.uzh.ch"
+RUN apk add --no-cache git
+RUN git clone https://gitlab.com/rwf-dev-public/timeline.git
+
+#FROM strapi/base
+FROM node:12-alpine
+RUN apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev nasm bash
+RUN mkdir -p /home/app
+COPY --from=cloner /timeline/backend /home/app
+WORKDIR /home/app
+ENV NODE_ENV production
+RUN npm install
+RUN npm run build
+CMD ["npm", "start"]

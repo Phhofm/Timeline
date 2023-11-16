@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/metaevents",
+      "handler": "metaevent.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/metaevents/count",
+      "handler": "metaevent.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/metaevents/:id",
+      "handler": "metaevent.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/metaevents",
+      "handler": "metaevent.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/metaevents/:id",
+      "handler": "metaevent.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/metaevents/:id",
+      "handler": "metaevent.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

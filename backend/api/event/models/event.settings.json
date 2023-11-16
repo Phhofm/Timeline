@@ -1,0 +1,70 @@
+{
+  "kind": "collectionType",
+  "collectionName": "events",
+  "info": {
+    "name": "event"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "content": {
+      "type": "richtext",
+      "required": true
+    },
+    "teaser": {
+      "type": "string",
+      "required": true
+    },
+    "era": {
+      "model": "era",
+      "via": "events"
+    },
+    "timespans": {
+      "collection": "timespan",
+      "via": "events",
+      "dominant": true
+    },
+    "startyear": {
+      "type": "integer",
+      "required": true
+    },
+    "endyear": {
+      "type": "integer",
+      "required": true
+    },
+    "type": {
+      "model": "type",
+      "via": "events"
+    },
+    "image": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images"
+      ],
+      "plugin": "upload",
+      "required": false
+    },
+    "metaevents": {
+      "collection": "metaevent",
+      "via": "events",
+      "dominant": true
+    },
+    "relates_to_event": {
+      "collection": "event",
+      "via": "related_to_by_event",
+      "dominant": true
+    },
+    "related_to_by_event": {
+      "collection": "event",
+      "via": "relates_to_event"
+    }
+  }
+}

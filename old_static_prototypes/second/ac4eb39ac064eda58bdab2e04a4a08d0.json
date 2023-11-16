@@ -1,0 +1,8 @@
+{
+  "name": "Legal History Timeline",
+  "short_name": "Timeline",
+  "lang": "de",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "landscape"
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<!-- This is the mobile site. I use the knightslab javascript timeline library here. -->
+<link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+
+<script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
+
+<script>
+    /* you can pass in options here */
+    PleaseRotateOptions = {
+        subMessage: "",
+        allowClickBypass: false,
+    };
+</script>
+
+<script src="pleaserotate.min.js"></script>
+
+<script type="text/javascript">
+
+    // We pass a single JSON Object into the library, but of course we need to adapt our JSON data response to the JSON Specification of this library
+    start();
+
+    async function start() {
+
+        // prepare url
+        let url = window.location.href.substr(0, window.location.href.lastIndexOf("/"));
+
+        const eventsResponse = await fetch(url + "/events?_limit=-1");
+        const eventsData = await eventsResponse.json();
+
+        let input = {
+            events: []
+        };
+
+        eventsData.forEach(event => {
+
+            let eventObject;
+
+            eventObject = {
+                text: { headline: event.title, text: event.teaser },
+                start_date: { year: event.startyear },
+                end_date: { year: event.endyear }
+            }
+
+            if (eventObject) {
+
+                if (eventObject.text.headline && eventObject.text.text && eventObject.start_date.year && eventObject.end_date.year) {
+                    input.events.push(eventObject);
+                }
+            }
+        });
+
+        var additionalOptions = {
+            is_embed: false,
+            initial_zoom: 3,
+        }
+
+        timeline = new TL.Timeline('timeline-embed',
+            input, additionalOptions);
+    }
+
+</script>
+
+<body>
+    <div id='timeline-embed' style="width:100%;height:350px"></div>
+</body>
+
+</html>

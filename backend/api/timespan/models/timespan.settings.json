@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "timespans",
+  "info": {
+    "name": "timespan"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "era": {
+      "model": "era",
+      "via": "timespans"
+    },
+    "teaser": {
+      "type": "string",
+      "required": true
+    },
+    "content": {
+      "type": "richtext",
+      "required": true
+    },
+    "startyear": {
+      "type": "integer",
+      "required": true
+    },
+    "endyear": {
+      "type": "integer"
+    },
+    "image": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images"
+      ],
+      "plugin": "upload",
+      "required": false
+    },
+    "events": {
+      "via": "timespans",
+      "collection": "event"
+    }
+  }
+}

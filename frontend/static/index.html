@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Legal History Timeline</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+
+    <!-- Info modal imports -->
+    <script src="https://cdn.jsdelivr.net/npm/micromodal/dist/micromodal.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+    <!-- Div redirects -->
+    <script>
+        function loadDesktop() {
+            window.location.href = "desktop.html";
+        }
+        function loadMobile() {
+            window.location.href = "mobile.html";
+        }
+    </script>
+
+    <!-- Internal CSS for main index page -->
+    <style>
+        /*** Styling for two div main page layout ***/
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        /* Create two equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 50%;
+            padding: 10px;
+            height: 100vh;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+            padding: 0%;
+        }
+
+        .desktop {
+            background-color: black;
+            color: white;
+        }
+
+        .mobile {
+            background-color: white;
+            color: black;
+        }
+
+        .button {
+            height: 100%;
+            width: 100%;
+            font-size: 10vh;
+            padding: 0;
+            margin: 0;
+            border: none;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+
+        /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+
+        @media screen and (max-width: 600px) {
+            .column {
+                width: 100%;
+                height: 50vh;
+            }
+        }
+
+
+        /*** Modal ***/
+
+        .modal {
+            font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+        }
+
+        .modal__overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal__container {
+            background-color: #fff;
+            padding: 30px;
+            max-width: 500px;
+            max-height: 100vh;
+            border-radius: 4px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .modal__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal__title {
+            margin-top: 0;
+            margin-bottom: 0;
+            font-weight: 600;
+            font-size: 1.25rem;
+            line-height: 1.25;
+            color: #00449e;
+            box-sizing: border-box;
+        }
+
+        .modal__close {
+            background: transparent;
+            border: 0;
+        }
+
+        .modal__header .modal__close:before {
+            content: "\2715";
+        }
+
+        .modal__content {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+            color: rgba(0, 0, 0, .8);
+        }
+
+        .modal__btn {
+            font-size: .875rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: .5rem;
+            padding-bottom: .5rem;
+            background-color: #e6e6e6;
+            color: rgba(0, 0, 0, .8);
+            border-radius: .25rem;
+            border-style: none;
+            border-width: 0;
+            cursor: pointer;
+            -webkit-appearance: button;
+            text-transform: none;
+            overflow: visible;
+            line-height: 1.15;
+            margin: 0;
+            will-change: transform;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            transition: -webkit-transform .25s ease-out;
+            transition: transform .25s ease-out;
+            transition: transform .25s ease-out, -webkit-transform .25s ease-out;
+        }
+
+        .modal__btn:focus,
+        .modal__btn:hover {
+            -webkit-transform: scale(1.05);
+            transform: scale(1.05);
+        }
+
+        .modal__btn-primary {
+            background-color: #00449e;
+            color: #fff;
+        }
+
+
+        /*** Modal Animation ***/
+
+        @keyframes mmfadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes mmfadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes mmslideIn {
+            from {
+                transform: translateY(15%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes mmslideOut {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-10%);
+            }
+        }
+
+        .micromodal-slide {
+            display: none;
+        }
+
+        .micromodal-slide.is-open {
+            display: block;
+        }
+
+        .micromodal-slide[aria-hidden="false"] .modal__overlay {
+            animation: mmfadeIn .3s cubic-bezier(0.0, 0.0, 0.2, 1);
+        }
+
+        .micromodal-slide[aria-hidden="false"] .modal__container {
+            animation: mmslideIn .3s cubic-bezier(0, 0, .2, 1);
+        }
+
+        .micromodal-slide[aria-hidden="true"] .modal__overlay {
+            animation: mmfadeOut .3s cubic-bezier(0.0, 0.0, 0.2, 1);
+        }
+
+        .micromodal-slide[aria-hidden="true"] .modal__container {
+            animation: mmslideOut .3s cubic-bezier(0, 0, .2, 1);
+        }
+
+        .micromodal-slide .modal__container,
+        .micromodal-slide .modal__overlay {
+            will-change: transform;
+        }
+
+
+        /* Floating info button */
+
+        .float {
+            position: fixed;
+            width: 45px;
+            height: 45px;
+            top: 10px;
+            left: 10px;
+            background-color: #0C9; /*#7FDBFF*/
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            box-shadow: 2px 2px 3px #999;
+        }
+
+        .my-float {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row">
+
+        <!-- Mobile div -->
+        <div class="column" style="background-color:white;">
+            <button class="button mobile" onclick="loadMobile()">Mobile<p style="font-size: 3vh;">(Simple Version)</p>
+            </button>
+        </div>
+
+        <!-- Desktop div -->
+        <div class="column" style="background-color:black;">
+            <button class="button desktop" onclick="loadDesktop()">Desktop<p style="font-size: 3vh;">(Full Version)</p>
+            </button>
+        </div>
+
+        <!-- Floating info button -->
+        <a href="#" class="float" data-custom-open="modal-1">
+            <i class="fa fa-info my-float"></i>
+        </a>
+
+        <!-- Modal content -->
+        <div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+            <div class="modal__overlay" tabindex="-1" data-custom-close="modal-1">
+                <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+                    <header class="modal__header">
+                        <h2 class="modal__title" id="modal-1-title">
+                            Legal History Timeline
+                        </h2>
+                        <button class="modal__close" aria-label="Close modal" data-custom-close="modal-1"></button>
+                    </header>
+                    <main class="modal__content" id="modal-1-content">
+                        <div>
+                            <p>Die Legal History Timeline Webapplikation wurde am RWI UZH entwickelt. Sie visualisiert
+                                die Ereignisse der Rechtsgeschiche als interaktive Lernhilfe für die Studenten.
+                                <a href="https://rwi.app/timeline/">Website</a>
+                            </p><br />
+                            <p>Entwicklung<br />
+                                Antonia Hartmann - Konzept und Daten<br />
+                                Philip Hofmann - Implementation
+                                <!-- <br /><br />
+                                Tech Stack<br />
+                                Docker, Strapi, THREE.js, Webpack, Spin.js, Particles.js, Timeline JS,
+                                PleaseRotate.js, Micromodal.js, Node.js, Typescript, NGINX, Gitlab CI/CD -->
+                            </p>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
+
+<script>
+    // from https://micromodal.vercel.app/
+    MicroModal.init({
+        onShow: modal => console.info(`${modal.id} is shown`),
+        onClose: modal => console.info(`${modal.id} is hidden`),
+        openTrigger: 'data-custom-open',
+        closeTrigger: 'data-custom-close',
+        openClass: 'is-open',
+        disableScroll: true,
+        disableFocus: false,
+        awaitOpenAnimation: true,
+        awaitCloseAnimation: true,
+        debugMode: false
+    });
+</script>

@@ -1,0 +1,77 @@
+{
+  "_args": [
+    [
+      "strapi-plugin-email@3.1.4",
+      "/home/phips/Documents/Git/strapi2"
+    ]
+  ],
+  "_from": "strapi-plugin-email@3.1.4",
+  "_id": "strapi-plugin-email@3.1.4",
+  "_inBundle": false,
+  "_integrity": "sha512-R+AIYa7OFgG42SZlHmt81x22US+V/OxHJk1mvYS3euOfI5B4EnLipKQYqsj0OVTuRLY31A/sDOyLUBCag1SQQg==",
+  "_location": "/strapi-plugin-email",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "strapi-plugin-email@3.1.4",
+    "name": "strapi-plugin-email",
+    "escapedName": "strapi-plugin-email",
+    "rawSpec": "3.1.4",
+    "saveSpec": null,
+    "fetchSpec": "3.1.4"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/strapi-plugin-email/-/strapi-plugin-email-3.1.4.tgz",
+  "_spec": "3.1.4",
+  "_where": "/home/phips/Documents/Git/strapi2",
+  "author": {
+    "name": "Strapi team",
+    "email": "hi@strapi.io",
+    "url": "http://strapi.io"
+  },
+  "bugs": {
+    "url": "https://github.com/strapi/strapi/issues"
+  },
+  "dependencies": {
+    "lodash": "4.17.19",
+    "strapi-provider-email-sendmail": "3.1.4",
+    "strapi-utils": "3.1.4"
+  },
+  "description": "This is the description of the plugin.",
+  "devDependencies": {
+    "rimraf": "3.0.0",
+    "strapi-helper-plugin": "3.1.4"
+  },
+  "engines": {
+    "node": ">=10.10.0",
+    "npm": ">=6.0.0"
+  },
+  "gitHead": "231263a3535658bab1e9492c6aaaed8692d62a53",
+  "homepage": "https://github.com/strapi/strapi#readme",
+  "license": "SEE LICENSE IN LICENSE",
+  "maintainers": [
+    {
+      "name": "Strapi team",
+      "email": "hi@strapi.io",
+      "url": "http://strapi.io"
+    }
+  ],
+  "name": "strapi-plugin-email",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/strapi/strapi.git"
+  },
+  "scripts": {
+    "test": "echo \"no tests yet\""
+  },
+  "strapi": {
+    "name": "Email",
+    "icon": "paper-plane",
+    "description": "email.plugin.description",
+    "required": true
+  },
+  "version": "3.1.4"
+}

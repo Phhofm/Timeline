@@ -1,0 +1,57 @@
+<!-- The html file, holding the div 'scene-container' where the three.js scene will be rendered into. -->
+<!-- @author phhofm / https://phhofm.github.io -->
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- if mobile device, we redirect to mobile site -->
+	<script type="text/javascript">
+		if (screen.width <= 699) {
+		document.location = "mobile.html";
+		}
+		</script>
+
+<head>
+	<title>Legal History Timeline</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<link href="https://fonts.googleapis.com/css?family=Cinzel|Quicksand&display=swap" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+</head>
+
+<body>
+	<!-- This div holds the timeperiod indicator -->
+	<div id="infoControls" style="
+        position: fixed;
+        left: 10px;
+        top: 5px;
+        z-index: 50;
+        color: azure;
+        font-size: 2rem;
+      "></div>
+	<!-- This div holds the metaevents overview -->
+	<div id="metaOverview" style="
+	position: fixed;
+	right: 10px;
+	top: 5px;
+	z-index: 50;
+	color: azure;
+	font-size: 1.5rem;
+  "></div>
+  	<!-- This div holds the metaevents overview -->
+	<div id="aboutPage" style="
+	position: fixed;
+	left: 10px;
+	bottom: 5px;
+	z-index: 50;
+	color: azure;
+	font-size: 1rem;
+  "></div>
+	<!-- This div holds the short Text when a sphere gets clicked -->
+	<div id="infoText"></div>
+	<!-- This div holds the Scene for TimeLine -->
+	<div id="scene-container"></div>
+</body>
+
+
+
+</html>

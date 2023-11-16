@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+
+  frontend:
+    build:
+      context: https://gitlab.com/rwf-dev-public/timeline.git#:docker-build
+      dockerfile: Dockerfile-frontend
+    image: timeline-frontend
+    container_name: timeline-frontend
+    ports: 
+      - 7001:80
+    depends_on:
+      - backend
+    networks: 
+      - timeline
+  
+  backend:
+    build:
+      context: https://gitlab.com/rwf-dev-public/timeline.git#:docker-build
+      dockerfile: Dockerfile-backend
+    image: timeline-backend
+    container_name: timeline-backend
+    networks: 
+      - timeline
+    volumes:
+      - sqlite:/home/app/.tmp
+      - uploads:/home/app/public/uploads
+
+volumes:
+  sqlite: {}
+  uploads: {}
+
+networks:
+  timeline: 
+    name: timeline-network

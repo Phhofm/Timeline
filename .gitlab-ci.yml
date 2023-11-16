@@ -1,0 +1,138 @@
+# pipeline stages
+stages:
+- build
+- test
+- deploy
+
+# Job that handles building
+docker-build-master:
+    stage: build
+    image: tmaier/docker-compose # image definition. Jobs themselves run in a docker container 
+    services:  
+        - docker:dind # to make sure docker deamon is started and available
+    before_script:
+    - docker login -u "$CI_REG_USERNAME" -p "$CI_REG_TOKEN" $CI_REGISTRY
+    - apk update
+    - apk upgrade
+    - apk add --no-cache git
+    script:
+    - docker-compose pull frontend
+    - docker-compose pull backend
+    - docker-compose build
+    - docker tag timeline-backend:latest registry.gitlab.com/rwf-dev-public/timeline/timeline-backend:testbuild
+    - docker tag timeline-frontend:latest registry.gitlab.com/rwf-dev-public/timeline/timeline-frontend:testbuild
+    - docker push registry.gitlab.com/rwf-dev-public/timeline/timeline-backend:testbuild
+    - docker push registry.gitlab.com/rwf-dev-public/timeline/timeline-frontend:testbuild
+    after_script:
+    - docker logout $CI_REGISTRY
+    only: 
+    - master
+    
+# Job that handles testing
+docker-test-master:
+    stage: test
+    image: tmaier/docker-compose # image definition. Jobs themselves run in a docker container 
+    services:  
+    - docker:dind # to make sure docker deamon is started and available
+    before_script:
+    - docker login -u "$CI_REG_USERNAME" -p "$CI_REG_TOKEN" $CI_REGISTRY
+    - apk update
+    - apk upgrade
+    - apk add --no-cache git curl
+    - apk add --no-cache bash
+    # output for setup inspection
+    - docker --version
+    - docker-compose --version
+    - curl --version
+    - git --version
+    - bash --version
+    script:
+    # run the docker-compose (to run containers in network) together with the previously built and uploaded images
+    - docker-compose -f docker-compose-test.yml --verbose up -d
+    # output for manual inspection
+    - docker images
+    - docker ps -a
+    - docker network ls
+    - docker network inspect timeline-network
+    - docker volume ls
+    # can we access the frontend container and from it reach the backend container in the same network, does backend container serve status page?
+    # the sleep is necessary for the container to be ready/running, otherwise this whole test will fail
+    - sleep 5s
+    - request=$(docker exec timeline-frontend curl --write-out '%{http_code}' --silent --output /dev/null timeline-backend:7000)
+    - if [ $request = 200 ] ; then echo 'success' ; else exit ; fi
+    # is nginx proying correctly? Can we access the dashboard from outside the docker network through nginx in frontend-container?
+    - request=$(docker exec test curl --write-out '%{http_code}' --silent --output /dev/null timeline-frontend:80/dashboard)
+    - if [ $request = 200 ] ; then echo 'success' ; else exit ; fi
+    # is nginx serving the static pages?
+    - request=$(docker exec test curl --write-out '%{http_code}' --silent --output /dev/null timeline-frontend:80/index.html)
+    - if [ $request = 200 ] ; then echo 'success' ; else exit ; fi
+    - request=$(docker exec test curl --write-out '%{http_code}' --silent --output /dev/null timeline-frontend:80/mobile.html)
+    - if [ $request = 200 ] ; then echo 'success' ; else exit ; fi
+    - request=$(docker exec test curl --write-out '%{http_code}' --silent --output /dev/null timeline-frontend:80/desktop.html)
+    - if [ $request = 200 ] ; then echo 'success' ; else exit ; fi
+    # are the strapi api endpoints reachable?
+    - request=$(docker exec test curl --write-out '%{http_code}' --silent --output /dev/null timeline-frontend:80/events)
+    - if [ $request = 200 ] ; then echo 'success' ; else exit ; fi
+    - request=$(docker exec test curl --write-out '%{http_code}' --silent --output /dev/null timeline-frontend:80/types)
+    - if [ $request = 200 ] ; then echo 'success' ; else exit ; fi
+    - request=$(docker exec test curl --write-out '%{http_code}' --silent --output /dev/null timeline-frontend:80/eras)
+    - if [ $request = 200 ] ; then echo 'success' ; else exit ; fi
+    - request=$(docker exec test curl --write-out '%{http_code}' --silent --output /dev/null timeline-frontend:80/metaevents)
+    - if [ $request = 200 ] ; then echo 'success' ; else exit ; fi
+    - request=$(docker exec test curl --write-out '%{http_code}' --silent --output /dev/null timeline-frontend:80/timespans)
+    - if [ $request = 200 ] ; then echo 'success' ; else exit ; fi
+    after_script:
+    - docker logout $CI_REGISTRY
+    only: 
+    - master
+
+# Job that handles pushing the new working images and updating our live site
+docker-deploy-master:
+    variables: 
+        CI_DEBUG_TRACE: "true"
+    stage: deploy
+    image: tmaier/docker-compose # image definition. Jobs themselves run in a docker container 
+    services:  
+        - docker:dind # to make sure docker deamon is started and available
+    before_script:
+    - docker login -u "$CI_REG_USERNAME" -p "$CI_REG_TOKEN" $CI_REGISTRY
+    script:
+  ## take the already tested images and push them to the reg renamed also with the :latest tag appended
+    - docker pull registry.gitlab.com/rwf-dev-public/timeline/timeline-backend:testbuild
+    - docker pull registry.gitlab.com/rwf-dev-public/timeline/timeline-frontend:testbuild
+    - docker tag registry.gitlab.com/rwf-dev-public/timeline/timeline-backend:testbuild registry.gitlab.com/rwf-dev-public/timeline/timeline-backend:latest
+    - docker tag registry.gitlab.com/rwf-dev-public/timeline/timeline-frontend:testbuild registry.gitlab.com/rwf-dev-public/timeline/timeline-frontend:latest
+    - docker push registry.gitlab.com/rwf-dev-public/timeline/timeline-backend:latest
+    - docker push registry.gitlab.com/rwf-dev-public/timeline/timeline-frontend:latest
+  ## Install ssh-agent if not already installed, it is required by Docker.
+  ## (change apt-get to yum if you use an RPM-based image)
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
+
+  ## Run ssh-agent (inside the build environment)
+    - eval $(ssh-agent -s)
+
+  ## Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+  ## masked by running cat /home/user/.ssh/key | base64 -w0 storing the output as a masked variable in gitlab
+  ## so we use decode to use it here
+  ## We're using tr to fix line endings which makes ed25519 keys work
+  ## without extra base64 encoding.
+  ## https://gitlab.com/gitlab-examples/ssh-private-key/issues/1#note_48526556
+  ## This is the ssh key of the jumper.
+    - echo "$SSH_PRIVATE_KEY_MASKED" | base64 -d | ssh-add -
+
+  ## Create the SSH directory and give it the right permissions
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+
+  ## Use ssh-keyscan to scan the keys of your private server. Replace gitlab.com
+  ## with your own domain name. You can copy and repeat that command if you have
+  ## more than one server to connect to.
+    - ssh-keyscan rwi.app >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+  ## trigger docker update; will recreate container if changes have been detected (meaning new version :latest deployed on our reg) using an ssh jumper
+    - ssh $JUMPER "ssh -i ~/.ssh/docker_host $DEPLOYER 'cd timeline && docker-compose pull && docker-compose up -d'"
+    after_script:
+    - docker logout $CI_REGISTRY
+    only: 
+    - master

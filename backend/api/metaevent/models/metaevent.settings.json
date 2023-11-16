@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "metaevents",
+  "info": {
+    "name": "metaevent"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "content": {
+      "type": "richtext",
+      "required": true
+    },
+    "events": {
+      "via": "metaevents",
+      "collection": "event"
+    }
+  }
+}

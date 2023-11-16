@@ -1,0 +1,30 @@
+version: "3.7"
+
+services:
+
+  frontend:
+    image: registry.gitlab.com/rwf-dev-public/timeline/timeline-frontend:latest
+    container_name: timeline-frontend
+    ports: 
+      - 7001:80
+    depends_on:
+      - backend
+    networks: 
+      - timeline
+  
+  backend:
+    image: registry.gitlab.com/rwf-dev-public/timeline/timeline-backend:latest
+    container_name: timeline-backend
+    networks: 
+      - timeline
+    volumes:
+      - sqlite:/home/app/.tmp
+      - uploads:/home/app/public/uploads
+
+volumes:
+  sqlite: {}
+  uploads: {}
+
+networks:
+  timeline: 
+    name: timeline-network
