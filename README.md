@@ -5,7 +5,7 @@
 
 This repository is simply a copy of the open source code I have initially released on gitlab and can be found [here](https://gitlab.com/rwf-dev-public/timeline).
 
-This is the repository holding the open source code and docker images for the timeline application [here](https://rwi.app/timeline/) (or [here](https://web.archive.org/web/20210618111754/https://rwi.app/timeline/)) and inspect a live version of this application [here](https://rwi.app/historytimeline/) (or [here](https://web.archive.org/web/20210519085254/https://rwi.app/historytimeline/)). The frontend folder holds the code for the Three.js application, while the backend folder holds the code for the strapi api. I included a README in each.
+This is the repository holding the open source code and docker images for the timeline application [here](https://lht.rwi.app/) (or [here](https://web.archive.org/web/20210618111754/https://rwi.app/timeline/)) and inspect a live version of this application [here](https://rwi.app/historytimeline/) (or [here](https://web.archive.org/web/20210519085254/https://rwi.app/historytimeline/)). The frontend folder holds the code for the Three.js application, while the backend folder holds the code for the strapi api. I included a README in each.
 
 ## Run
 To run the dockerized version, download the [**docker-compose-prebuilt-images.yml**](https://gitlab.com/rwf-dev-public/timeline/-/blob/master/docker-compose-prebuilt-images.yml) file from this repository.
